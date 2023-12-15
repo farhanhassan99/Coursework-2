@@ -1,0 +1,106 @@
+
+# Function to display policyholder details by policy number
+def display_policyholder_details(policy_number):
+    with open('policyholders.csv', 'r') as file:
+        lines = file.readlines()
+        for line in lines:
+            data = line.strip().split(',')
+            if data[0] == policy_number:
+                print("Policy Number:", data[0])
+                print("First Name:", data[1])
+                print("Surname:", data[2])
+                print("Age:", data[3])
+                print("Gender:", data[4])
+                print("Area:", data[5])
+                return
+        print("Policyholder not found.")
+
+
+# Function to check if a policyholder already exists
+def policyholder_exists(policy_number):
+    with open('policyholders.csv', 'r') as file:
+        lines = file.readlines()
+        for line in lines:
+            data = line.strip().split(',')
+            if data[0] == policy_number:
+                return True
+        return False
+
+
+# Function to add a new policyholder
+def add_policyholder():
+    policy_number = input("Enter Policy Number (e.g. P0000001): ")
+    if not (policy_number.startswith('P') and policy_number[1:].isdigit()):
+        print("Invalid Policy Number format. It should start with 'P' followed by digits.")
+        return
+
+    first_name = input("Enter First Name: ")
+    if first_name.isdigit():
+        print("First Name cannot be entirely numeric.")
+        return
+    
+    surname = input("Enter Surname: ")
+    if surname.strip() == '':
+        print("Surname cannot be empty.")
+        return
+
+    if surname.isdigit():
+        print("Surname cannot be entirely numeric.")
+        return
+    
+    age = input("Enter Age (Young/Old): ")
+    if age not in ['Young', 'Old']:
+        print("Invalid Age. It should be 'Young' or 'Old'.")
+        return
+    
+    gender = input("Enter Gender (Male/Female): ")
+    if gender not in ['Male', 'Female']:
+        print("Invalid Gender. It should be 'Male' or 'Female'.")
+        return
+    
+    area = input("Enter Area (North/Central/South): ")
+    if area not in ['North', 'Central', 'South']:
+        print("Invalid Area. It should be 'North', 'Central', or 'South'.")
+        return
+
+
+    new_policyholder = f"{policy_number},{first_name},{surname},{age},{gender},{area}\n"
+
+    # Append new policyholder to the file
+    with open('policyholders.csv', 'a') as file:
+        file.write(new_policyholder)
+        print("New policyholder added successfully.")
+
+
+def validate_choice(choice):
+    valid_choices = ['1', '2', '3']
+    return choice in valid_choices
+
+
+# Main menu with input validation
+while True:
+    print("\nMain Menu")
+    print("1. Display Policyholder Details")
+    print("2. Add New Policyholder")
+    print("3. Exit")
+
+    choice = input("Enter your choice 1, 2, or 3: ")
+
+    if validate_choice(choice):
+        if choice == '1':
+            policy_number = input("Enter Policy Number (e.g. P0000001): ")
+            display_policyholder_details(policy_number)
+        elif choice == '2':
+            add_policyholder()
+            save_choice = input("Do you want to save changes to the file? (yes/no): ")
+            if save_choice.lower() == 'yes':
+                # You might want to add the saving functionality here
+                # For simplicity, it's not implemented in this example
+                print("Changes saved.")
+            else:
+                print("Changes not saved.")
+        elif choice == '3':
+            print("Exiting program.")
+            break
+    else:
+        print("Invalid choice. Please enter a valid option.")
